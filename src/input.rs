@@ -1,0 +1,102 @@
+use std::fs;
+use std::io::{self, Write};
+
+// Упрощенная версия чтения из файла
+pub fn read_matrix_from_file() -> Result<(Vec<Vec<f64>>, Vec<f64>, f64), String> {
+    print!("Введите имя файла: ");
+    io::stdout().flush().unwrap();
+
+    let mut filename = String::new();
+    io::stdin().read_line(&mut filename).unwrap();
+    let filename = filename.trim();
+
+    let content = fs::read_to_string(filename).map_err(|_| format!("Ошибка, файл \"{}\" не найден!", filename))?;
+
+    let mut all_numbers = Vec::new();
+    for word in content.split_whitespace() {
+        let clean_word = word.replace(",", ".");
+        let num: f64 = clean_word.parse().map_err(|_| format!("Ошибка: '{}' не является числом!", clean_word))?;
+        all_numbers.push(num);
+    }
+
+    // Теперь достаем числа из списка по порядку
+    let mut current_pos = 0;
+
+    // 1. Первое число — это размерность N
+    let n = all_numbers[current_pos] as usize;
+    current_pos += 1;
+
+    let mut a = vec![vec![0.0; n]; n];
+    let mut b = vec![0.0; n];
+
+    // 2. Читаем саму матрицу (N строк)
+    for i in 0..n {
+        for j in 0..n {
+            a[i][j] = all_numbers[current_pos];
+            current_pos += 1;
+        }
+        // Последнее число в строке — это свободный член из вектора B
+        b[i] = all_numbers[current_pos];
+        current_pos += 1;
+    }
+
+    // 3. Последнее число — это точность Epsilon
+    let epsilon = all_numbers[current_pos];
+
+    Ok((a, b, epsilon))
+}
+
+
+pub fn read_matrix_from_keyboard() -> Result<(Vec<Vec<f64>>, Vec<f64>, f64), String> {
+    // 1. Читаем размерность n
+    print!("Введите размерность матрицы n (до 20): ");
+    io::stdout().flush().unwrap();
+    let mut n_str = String::new();
+    io::stdin().read_line(&mut n_str).map_err(|e| e.to_string())?;
+    let n: usize = n_str.trim().parse().map_err(|_| "Размерность должна быть целым числом")?;
+
+    if n == 0 || n > 20 {
+        return Err("Размерность должна быть от 1 до 20".to_string());
+    }
+
+    let mut a = Vec::with_capacity(n);
+    let mut b = Vec::with_capacity(n);
+
+    println!("Введите строки матрицы. Каждая строка должна содержать чисел: {} ({} - коэффициенты A и затем b):", n + 1, n);
+
+    // 2. Читаем n строк
+    for i in 0..n {
+        loop { // Цикл, чтобы переввести строку, если пользователь ошибся
+            print!("Строка {}: ", i + 1);
+            io::stdout().flush().unwrap();
+
+            let mut line = String::new();
+            io::stdin().read_line(&mut line).map_err(|e| e.to_string())?;
+
+            let nums: Vec<f64> = line
+                .split_whitespace()
+                .map(|s| s.replace(',', ".").parse())
+                .collect::<Result<Vec<_>, _>>()
+                .map_err(|_| "Ошибка: введите корректные числа через пробел")?;
+
+            if nums.len() == n + 1 {
+                let mut row = nums;
+                b.push(row.pop().unwrap()); // Забираем последнее число в b
+                a.push(row);               // Остальное в A
+                break; // Строка введена верно, выходим из loop
+            } else {
+                println!("ОШИБКА: Нужно ввести ровно {} чисел. Попробуйте еще раз.", n + 1);
+            }
+        }
+    }
+
+    // 3. Читаем точность
+    print!("Введите точность (epsilon, например 0.001): ");
+    io::stdout().flush().unwrap();
+    let mut eps_str = String::new();
+    io::stdin().read_line(&mut eps_str).map_err(|e| e.to_string())?;
+    let epsilon: f64 = eps_str.trim().replace(',', ".").parse()
+        .map_err(|_| "Точность должна быть числом")?;
+
+    Ok((a, b, epsilon))
+}

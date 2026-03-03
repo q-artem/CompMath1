@@ -1,6 +1,11 @@
-use crate::input::read_matrix_from_file;
-use crate::io::Align::{Center, Right};
-use crate::io::{print, print_header, print_menu, read_choice};
+use io::Align::{Center, Right};
+use io::{print, print_header, print_menu, read_choice};
+
+use input::read_matrix_from_file;
+
+use input::gen_random_matrix;
+
+use crate::io::print_matrix;
 
 mod input;
 mod io;
@@ -38,6 +43,13 @@ fn main() {
                 let b = vec![14.0, 12.0, 13.0];
                 solve_and_print(a, b, 0.01);
             }
+            Some(4) => {
+                print_header("ГЕНЕРАЦИЯ МАТРИЦЫ", 3);
+                match gen_random_matrix() {
+                    Ok((a, b, eps)) => solve_and_print(a, b, eps),
+                    Err(e) => println!("ОШИБКА: {}", e),
+                }
+            }
             Some(42) => {
                 print("42", Center);
             }
@@ -57,7 +69,10 @@ fn solve_and_print(mut a: Vec<Vec<f64>>, mut b: Vec<f64>, epsilon: f64) {
     if !math::make_diagonally_dominant(&mut a, &mut b) {
         println!("ВНИМАНИЕ: Диагональное преобладание не достигнуто. Метод может не сойтись.");
     } else {
-        println!("Матрица успешно преобразована для диагонального преобладания.");
+        println!(
+            "Матрица успешно преобразована для диагонального преобладания. Преобразованная матрица:"
+        );
+        print_matrix(&a, &b, 2);
     }
 
     let norm = math::matrix_norm(&a);

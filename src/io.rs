@@ -32,7 +32,7 @@ pub fn print_sep_line(level: u8) {
 }
 
 pub enum Align {
-    // Left,
+    Left,
     Center,
     Right,
 }
@@ -48,9 +48,9 @@ pub fn print(text: &str, align: Align) {
     let spaces = " ".repeat(padding);
 
     match align {
-        // Align::Left => {
-        //     println!("{}{}", text, spaces);
-        // }
+        Align::Left => {
+            println!("{}{}", text, spaces);
+        }
         Align::Right => {
             println!("{}{}", spaces, text);
         }
@@ -67,6 +67,7 @@ pub fn print_menu() {
     println!("1.  Ввести матрицу с клавиатуры");
     println!("2.  Прочитать матрицу из файла");
     println!("3.  Запустить тестовый пример (из методички)");
+    println!("4.  Сгенерировать случайную матрицу");
     println!("42. Ответ на главный вопрос жизни, вселенной и всего такого");
     println!("0.  Выход");
     print_sep_line(2);
@@ -81,4 +82,33 @@ pub fn read_choice() -> Option<u32> {
         return None;
     }
     input.trim().parse::<u32>().ok()
+}
+
+pub fn print_matrix(a: &Vec<Vec<f64>>, b: &Vec<f64>, precision: usize) {
+    let n = a.len();
+
+    let cell_width = precision + 4;
+
+    let sep_line = "-".repeat((n + 1) * (cell_width + 1) + 5);
+    println!("{}", sep_line);
+    for i in 0..n {
+        print!("| ");
+
+        for j in 0..n {
+            print!(
+                "{:>width$.prec$} ",
+                a[i][j],
+                width = cell_width,
+                prec = precision
+            );
+        }
+
+        println!(
+            "| {:>width$.prec$} |",
+            b[i],
+            width = cell_width,
+            prec = precision
+        );
+    }
+    println!("{}", sep_line);
 }

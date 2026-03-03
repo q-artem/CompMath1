@@ -1,3 +1,6 @@
+use crate::io::Align::Left;
+use crate::io::{print, print_matrix};
+use rand::Rng;
 use std::fs;
 use std::io::{self, Write};
 
@@ -20,6 +23,10 @@ pub fn read_matrix_from_file() -> Result<(Vec<Vec<f64>>, Vec<f64>, f64), String>
             .parse()
             .map_err(|_| format!("Ошибка: '{}' не является числом!", clean_word))?;
         all_numbers.push(num);
+    }
+
+    if all_numbers.len() != all_numbers[0] as usize {
+        return Err("Ошибка формата файла".to_string());
     }
 
     // достаем числа из списка по порядку
@@ -50,7 +57,7 @@ pub fn read_matrix_from_file() -> Result<(Vec<Vec<f64>>, Vec<f64>, f64), String>
 }
 
 pub fn read_matrix_from_keyboard() -> Result<(Vec<Vec<f64>>, Vec<f64>, f64), String> {
-    // 1. Читаем размерность n
+    // Читаем размерность n
     print!("Введите размерность матрицы n (до 20): ");
     io::stdout().flush().unwrap();
     let mut n_str = String::new();
@@ -106,6 +113,69 @@ pub fn read_matrix_from_keyboard() -> Result<(Vec<Vec<f64>>, Vec<f64>, f64), Str
     }
 
     // точность
+    print!("Введите точность (epsilon, например 0.001): ");
+    io::stdout().flush().unwrap();
+    let mut eps_str = String::new();
+    io::stdin()
+        .read_line(&mut eps_str)
+        .map_err(|e| e.to_string())?;
+    let epsilon: f64 = eps_str
+        .trim()
+        .replace(',', ".")
+        .parse()
+        .map_err(|_| "Точность должна быть числом")?;
+
+    Ok((a, b, epsilon))
+}
+pub fn gen_random_matrix() -> Result<(Vec<Vec<f64>>, Vec<f64>, f64), String> {
+    print!("Введите размерность матрицы n (до 20): ");
+    io::stdout().flush().unwrap();
+    let mut n_str = String::new();
+    io::stdin()
+        .read_line(&mut n_str)
+        .map_err(|e| e.to_string())?;
+    let n: usize = n_str
+        .trim()
+        .parse()
+        .map_err(|_| "Размерность должна быть целым числом")?;
+
+    if n == 0 || n > 20 {
+        return Err("Размерность должна быть от 1 до 20".to_string());
+    }
+
+    let mut rng = rand::thread_rng();
+    let mut a = vec![vec![0.0; n]; n];
+    let mut b = vec![0.0; n];
+
+    for i in 0..n {
+        let mut row_sum = 0.0;
+
+        // всё кроме диагонального
+        for j in 0..n {
+            if i != j {
+                let val = rng.gen_range(-10.0..10.0);
+                a[i][j] = val;
+                row_sum += if val < 0.0 { -val } else { val }; // Считаем сумму модулей
+            }
+        }
+
+        //ненерируем диагональный
+        let diagonal_val = row_sum + rng.gen_range(1.0..10.0);
+
+        // по приколу знак поменяем
+        a[i][i] = if rng.gen_bool(0.5) {
+            diagonal_val
+        } else {
+            -diagonal_val
+        };
+
+        b[i] = rng.gen_range(-10.0..10.0);
+    }
+
+    print("Матрица успешно сгенерирована:", Left);
+
+    print_matrix(&a, &b, 2);
+
     print!("Введите точность (epsilon, например 0.001): ");
     io::stdout().flush().unwrap();
     let mut eps_str = String::new();

@@ -72,7 +72,10 @@ fn solve_and_print(mut a: Vec<Vec<f64>>, mut b: Vec<f64>, epsilon: f64) {
     println!("Количество итераций: {}", iters);
     println!();
 
-    println!("{:>3} | {:>12} | {:>12} | {:>12}", "№", "x[i]", "Невязка", "Погрешность");
+    println!(
+        "{:>3} | {:>12} | {:>12} | {:>12}",
+        "№", "x[i]", "Невязка", "Погрешность"
+    );
     println!("{}", "-".repeat(50));
 
     for i in 0..x.len() {

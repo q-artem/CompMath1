@@ -1,8 +1,6 @@
 use std::io::{self, Write};
 
-
 const CONSOLE_WIDTH: usize = 80;
-
 
 pub fn print_header(title: &str, level: u8) {
     let title_len = title.chars().count();
@@ -21,7 +19,6 @@ pub fn print_header(title: &str, level: u8) {
         let left = symbol.repeat(total / 2);
         let right = symbol.repeat(total - total / 2);
         println!("{} {} {}", left, title, right);
-
     }
 }
 
@@ -39,7 +36,6 @@ pub enum Align {
     Center,
     Right,
 }
-
 
 pub fn print(text: &str, align: Align) {
     let chars_count = text.chars().count();
@@ -66,7 +62,6 @@ pub fn print(text: &str, align: Align) {
     }
 }
 
-
 pub fn print_menu() {
     print_header("ГЛАВНОЕ МЕНЮ", 2);
     println!("1.  Ввести матрицу с клавиатуры");
@@ -80,14 +75,10 @@ pub fn print_menu() {
     io::stdout().flush().unwrap();
 }
 
-// Функция безопасно читает целое число.
-// Возвращает Option<u32>: либо Some(число), либо None (если ввели мусор)
 pub fn read_choice() -> Option<u32> {
     let mut input = String::new();
-    // Читаем строку из консоли
     if io::stdin().read_line(&mut input).is_err() {
         return None;
     }
-    // Очищаем от пробелов/переносов строк (trim) и пытаемся распарсить в u32
     input.trim().parse::<u32>().ok()
 }

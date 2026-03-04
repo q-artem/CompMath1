@@ -25,7 +25,7 @@ pub fn read_matrix_from_file() -> Result<(Vec<Vec<f64>>, Vec<f64>, f64), String>
         all_numbers.push(num);
     }
 
-    if all_numbers.len() != all_numbers[0] as usize {
+    if all_numbers.len() != (all_numbers[0] * all_numbers[0] + all_numbers[0] + 2.0) as usize {
         return Err("Ошибка формата файла".to_string());
     }
 

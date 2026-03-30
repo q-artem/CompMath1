@@ -12,8 +12,10 @@ pub fn read_matrix_from_file() -> Result<(Vec<Vec<f64>>, Vec<f64>, f64), String>
     io::stdin().read_line(&mut filename).unwrap();
     let filename = filename.trim();
 
-    let content = fs::read_to_string(filename)
-        .map_err(|_| format!("Ошибка, файл \"{}\" не найден!", filename))?;
+    let full_path = format!("tests/lab1/{}", filename);
+
+    let content = fs::read_to_string(&full_path)
+        .map_err(|_| format!("Ошибка, файл \"{}\" не найден!", &full_path))?;
 
     let mut all_numbers = Vec::new();
     for word in content.split_whitespace() {

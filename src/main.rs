@@ -1,11 +1,11 @@
 use std::io::Write;
-use io::print_header;
+use data_io::print_header;
 
-use crate::io::{print, print_sep_line, read_choice};
-use crate::io::Align::Right;
+use crate::data_io::{print, print_sep_line, read_choice};
+use crate::data_io::Align::Right;
 mod lab1;
 
-mod io;
+mod data_io;
 mod lab2;
 
 fn main() {
@@ -23,6 +23,10 @@ fn main() {
         match read_choice() {
             Some(1) => {
                 lab1::solve();
+                break;
+            }
+            Some(2) => {
+                lab2::solve();
                 break;
             }
             _ => println!("Ошибка. Введите корректный номер лабораторной")

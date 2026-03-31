@@ -1,5 +1,5 @@
-use crate::io::Align::Left;
-use crate::io::{print, print_matrix};
+use crate::data_io::Align::Left;
+use crate::data_io::{print, print_matrix};
 use rand::Rng;
 use std::fs;
 use std::io::{self, Write};

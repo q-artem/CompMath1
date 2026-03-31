@@ -1,4 +1,4 @@
-use std::io::{self, Write};
+use std::io::{self};
 
 const CONSOLE_WIDTH: usize = 80;
 
@@ -60,20 +60,6 @@ pub fn print(text: &str, align: Align) {
             println!("{}{}{}", " ".repeat(left_pad), text, " ".repeat(right_pad));
         }
     }
-}
-
-pub fn print_menu() {
-    print_header("ГЛАВНОЕ МЕНЮ", 2);
-    println!("1.  Ввести матрицу с клавиатуры");
-    println!("2.  Прочитать матрицу из файла");
-    println!("3.  Запустить тестовый пример (из методички)");
-    println!("4.  Сгенерировать случайную матрицу");
-    println!("42. Ответ на главный вопрос жизни, вселенной и всего такого");
-    println!("0.  Выход");
-    print_sep_line(2);
-    print!("Выберите пункт: ");
-
-    io::stdout().flush().unwrap();
 }
 
 pub fn read_choice() -> Option<u32> {

@@ -1,7 +1,9 @@
 pub mod input;
 pub mod math;
-use crate::io::{print, print_header, print_matrix, print_menu, read_choice};
-use crate::io::Align::{Center, Right};
+use std::io::{self, Write};
+
+use crate::data_io::Align::{Center, Right};
+use crate::data_io::{print, print_header, print_matrix, print_sep_line, read_choice};
 use crate::lab1::input::{gen_random_matrix, read_matrix_from_file};
 
 pub(crate) fn solve() {
@@ -95,4 +97,18 @@ fn solve_and_print(mut a: Vec<Vec<f64>>, mut b: Vec<f64>, epsilon: f64) {
         );
     }
     println!("{}", "-".repeat(50));
+}
+
+pub fn print_menu() {
+    print_header("ГЛАВНОЕ МЕНЮ", 2);
+    println!("1.  Ввести матрицу с клавиатуры");
+    println!("2.  Прочитать матрицу из файла");
+    println!("3.  Запустить тестовый пример (из методички)");
+    println!("4.  Сгенерировать случайную матрицу");
+    println!("42. Ответ на главный вопрос жизни, вселенной и всего такого");
+    println!("0.  Выход");
+    print_sep_line(2);
+    print!("Выберите пункт: ");
+
+    std::io::stdout().flush().unwrap();
 }

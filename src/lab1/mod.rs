@@ -1,6 +1,6 @@
 pub mod input;
 pub mod math;
-use std::io::{self, Write};
+use std::io::{Write};
 
 use crate::data_io::Align::{Center, Right};
 use crate::data_io::{print, print_header, print_matrix, print_sep_line, read_choice};

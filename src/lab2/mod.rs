@@ -10,6 +10,7 @@ use crate::lab2::solvers::analyse_and_solve_linear;
 pub mod equations;
 pub mod solvers;
 pub mod utils;
+pub mod ui;
 
 pub(crate) fn solve() {
     loop {

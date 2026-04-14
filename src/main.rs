@@ -3,9 +3,9 @@ use data_io::print_header;
 
 use crate::data_io::{print, print_sep_line, read_choice};
 use crate::data_io::Align::Right;
-mod lab1;
 
 mod data_io;
+mod lab1;
 mod lab2;
 
 fn main() {
@@ -15,20 +15,25 @@ fn main() {
     loop {
         print_header("Выберите лабораторную для запуска", 2);
         println!("1.  Лабораторная работа 1");
-        println!("2.  Лабораторная работа 2");
+        println!("2.  Лабораторная работа 2 (CLI)");
+        println!("3.  Лабораторная работа 2 (UI)");
+        println!("0.  Выход");
 
         print_sep_line(2);
         print!("Выберите пункт: ");
         std::io::stdout().flush().unwrap();
+        
         match read_choice() {
             Some(1) => {
                 lab1::solve();
-                break;
             }
             Some(2) => {
                 lab2::solve();
-                break;
             }
+            Some(3) => {
+                lab2::ui::run_ui(); 
+            }
+            Some(0) => break,
             _ => println!("Ошибка. Введите корректный номер лабораторной")
         }
     }
